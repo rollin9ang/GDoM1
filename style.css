@@ -115,6 +115,16 @@ body {
     padding-top: 6px;
 }
 
+#item-author {
+    display: none;
+    pointer-events: none;
+}
+
+body.dark-mode #item-author {
+    display: block;
+    pointer-events: auto;
+}
+
 /* 하단 라벨 및 변환 값 스타일 */
 .label,
 .value {

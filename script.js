@@ -74,6 +74,10 @@ function toggleCategory(elementId) {
     const target = document.getElementById(elementId);
     if (!target) return;
 
+    if (elementId === 'item-author' && !document.body.classList.contains('dark-mode')) {
+        return;
+    }
+
     const isActive = target.classList.toggle('active');
 
     // ==========================================
@@ -86,6 +90,7 @@ function toggleCategory(elementId) {
         if (elementId === 'item-title') {
             if (isActive) {
                 // [다크모드 ON]
+                document.body.classList.add('dark-mode');
                 document.body.style.backgroundColor = '#3a4044';
                 document.body.style.color = '#dfedef';
                 allGlobalTitles.forEach(title => title.style.color = '#dfedef');
@@ -109,6 +114,8 @@ function toggleCategory(elementId) {
 
             } else {
                 // [다크모드 OFF]
+                document.body.classList.remove('dark-mode');
+                document.getElementById('item-author')?.classList.remove('active');
                 document.body.style.backgroundColor = '#dfedef';
                 document.body.style.color = '#3a4044';
                 allGlobalTitles.forEach(title => title.style.color = '#3a4044');
