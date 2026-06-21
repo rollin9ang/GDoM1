@@ -1,0 +1,170 @@
+/* 기본 스타일 초기화 및 전체 폰트 설정 (기존 유지) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica", Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+body {
+    background-color: #dfedef;
+    color: #545c63;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    overflow-x: hidden;
+}
+
+/* [상단] 3열 레이아웃 */
+.top-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr;
+    gap: 2rem;
+}
+
+/* [하단] 3열 레이아웃 */
+.bottom-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr;
+    gap: 2rem;
+    margin-top: auto;
+    padding-top: 5rem;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* 메인 카테고리 제목 스타일 */
+.clickable-title {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+}
+
+/* 정보 리스트 스타일 기본 세팅 */
+.info-list {
+    list-style: none;
+    font-size: 2.2rem;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+.info-list li {
+    margin-bottom: 0.4rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity;
+}
+
+.column.active .info-list { pointer-events: auto; }
+.column.active .info-list li { opacity: 1; }
+
+/* ==========================================
+   ★ [나타날 때] 위에서 아래로 정방향 세팅 (기존) ★
+   ========================================== */
+.column.active .info-list li:nth-child(1) { transition-delay: 0.07s; }
+.column.active .info-list li:nth-child(2) { transition-delay: 0.14s; }
+.column.active .info-list li:nth-child(3) { transition-delay: 0.21s; }
+.column.active .info-list li:nth-child(4) { transition-delay: 0.24s; }
+.column.active .info-list li:nth-child(5) { transition-delay: 0.28s; }
+.column.active .info-list li:nth-child(6) { transition-delay: 0.35s; }
+.column.active .info-list li:nth-child(7) { transition-delay: 0.42s; }
+.column.active .info-list li:nth-child(8) { transition-delay: 0.51s; }
+.column.active .info-list li:nth-child(9) { transition-delay: 0.58s; }
+
+/* ==========================================
+   ★ [사라질 때] 아래에서 위로 역방향 세팅 (추가!) ★
+   active가 떨어졌을 때(.column:not(.active))는 맨 밑의 9번부터 먼저 사라지게 만듭니다.
+   ========================================== */
+.column:not(.active) .info-list li:nth-child(1) { transition-delay: 0.58s; }
+.column:not(.active) .info-list li:nth-child(2) { transition-delay: 0.51s; }
+.column:not(.active) .info-list li:nth-child(3) { transition-delay: 0.42s; }
+.column:not(.active) .info-list li:nth-child(4) { transition-delay: 0.35s; }
+.column:not(.active) .info-list li:nth-child(5) { transition-delay: 0.28s; }
+.column:not(.active) .info-list li:nth-child(6) { transition-delay: 0.24s; }
+.column:not(.active) .info-list li:nth-child(7) { transition-delay: 0.21s; }
+.column:not(.active) .info-list li:nth-child(8) { transition-delay: 0.14s; }
+.column:not(.active) .info-list li:nth-child(9) { transition-delay: 0.00s; }
+
+
+/* ==========================================
+   ★ 여기서부터 새로 바뀐 진짜 자동 매칭 구조 ★
+   ========================================== */
+
+/* 하단 전용 토글 아이템 박스 */
+.bottom-item {
+    position: relative;
+    height: 3rem;
+    cursor: pointer;
+    user-select: none;
+    /* 100%를 지우고, 내부에서 '실제 밀어내는 알맹이 글자 크기'만큼만 박스가 잡히게 합니다. */
+    width: max-content; 
+    justify-self: start; /* 그리드 안에서 왼쪽 정렬 고정 */
+    padding-top: 6px;
+}
+
+/* 하단 라벨 및 변환 값 스타일 */
+.label,
+.value {
+    font-size: 2.2rem;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    transition: opacity;
+}
+
+/* ★ 핵심 꼼수 탈출: 두 글자를 겹치기 위해 하나만 absolute로 띄우는 게 아니라, 
+   둘 다 각자 상태에 맞춰 필요할 때만 물리적인 부피를 가지게 정렬합니다. */
+
+/* 1. 기본 상태: 라벨(Title)은 원래 자리에 존재하고, 변환값(Elevator)은 숨겨두고 부피를 0으로 만듭니다. */
+.label {
+    display: block;
+    opacity: 1;
+}
+.value {
+    display: none; /* 부피를 완전히 없앰 */
+    opacity: 0;
+}
+
+/* 2. 클릭 후 활성화상태(.active): 반대로 라벨 부피를 없애고 변환값이 튀어나와 박스 크기를 밀어내게 합니다. */
+.bottom-item.active .label {
+    display: none; /* 부피를 완전히 없앰 */
+    opacity: 0;
+}
+.bottom-item.active .value {
+    display: block; /* 이제 이 글자 크기가 히트박스 너비가 됨 */
+    opacity: 1;
+}
+
+
+/* ==========================================
+   ★ 글자 크기에 실시간 칼매칭되는 사각형 테두리 ★
+   ========================================== */
+
+/* 1. 상단 타이틀 호버 효과 */
+.clickable-title:hover {
+    color: inherit !important;
+    outline: 1.4px solid currentColor !important;
+    outline-offset: 3px; 
+}
+
+/* 2. 하단 아이템 호버 효과
+   클릭 전이든 후든, 현재 화면을 밀어내고 있는 진짜 글자 크기(max-content)만큼만 
+   부모 박스 너비가 실시간으로 변하기 때문에, 테두리도 그 너비에 칼같이 맞춰서 생성됩니다! */
+.bottom-item:hover {
+    outline: 1.4px solid currentColor !important;
+    outline-offset: 2px;
+}

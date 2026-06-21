@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Information Matrix (Sequential Fade-in)</title>
+    <link href="./style.css" rel='stylesheet' type="text/css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <div class="top-container">
+        <div class="column" id="col-keywords">
+            <div class="clickable-title" onclick="toggleCategory('col-keywords')">Keywords</div>
+            <ul class="info-list">
+                <li>elevator</li>
+                <li>grand hotel</li>
+                <li>attic</li>
+                <li>penthouse</li>
+                <li>roof garden</li>
+                <li>urbanization</li>
+                <li>metropolis</li>
+                <li>organization</li>
+                <li>space</li>
+            </ul>
+        </div>
+        
+        <div class="column" id="col-editor">
+            <div class="clickable-title" onclick="toggleCategory('col-editor')">Editor</div>
+            <ul class="info-list">
+                <li>Timon Beyes</li>
+                <li>Robin Holt</li>
+                <li>Claus Pias</li>
+            </ul>
+        </div>
+
+        <div class="column" id="col-book">
+            <div class="clickable-title" onclick="toggleCategory('col-book')">Book</div>
+            <ul class="info-list">
+                <li>The Oxford Handbook of Media,</li>
+                <li>Technology, and Organization Studies</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bottom-container">
+        <div class="bottom-item" id="item-title" onclick="toggleCategory('item-title')">
+            <div class="label">Title</div>
+            <div class="value">Elevator</div>
+        </div>
+        
+        <div class="bottom-item" id="item-author" onclick="toggleCategory('item-author')">
+            <div class="label">Author</div>
+            <div class="value">Andreas Bernard</div>
+        </div>
+        
+        <div></div>
+    </div>
+</body>
+</html>
