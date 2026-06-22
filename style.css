@@ -220,6 +220,14 @@ body.dark-mode #item-author {
         grid-template-columns: 1fr 1fr 1.25fr;
     }
 
+    .top-container {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #col-book {
+        grid-column: 1 / -1;
+    }
+
     .bottom-container {
         margin-top: 0;
         padding-top: 0.25rem;
@@ -230,12 +238,12 @@ body.dark-mode #item-author {
     }
 
     .clickable-title {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         margin-bottom: 0.65rem;
     }
 
     .info-list {
-        font-size: 0.88rem;
+        font-size: 0.94rem;
         line-height: 1.08;
     }
 
@@ -252,7 +260,7 @@ body.dark-mode #item-author {
 
     .label,
     .value {
-        font-size: 1rem;
+        font-size: 1.05rem;
         line-height: 1.05;
     }
 
