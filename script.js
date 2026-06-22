@@ -124,7 +124,13 @@ function playRandomDetailClicks() {
     const activeItems = Array.from(document.querySelectorAll('.top-container .column.active .info-list li'));
     const shuffledItems = activeItems.sort(() => Math.random() - 0.5);
 
-    shuffledItems.slice(0, 5).forEach(item => item.click());
+    shuffledItems.slice(0, 5).forEach((item, index) => {
+        setTimeout(() => {
+            if (!isDarkMode() || !isAuthorMode()) return;
+
+            item.click();
+        }, index * 500);
+    });
 }
 
 function runColorScan(targetId, listItems) {
