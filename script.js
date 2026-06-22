@@ -10,6 +10,29 @@ const columnSounds = {
     'col-editor': new Audio('./sound/column2.mp3'),
     'col-book': new Audio('./sound/column3.mp3')
 };
+const detailSoundFiles = {
+    'col-keywords': [
+        './sound/1f.mp3',
+        './sound/basement.mp3',
+        './sound/7f.mp3',
+        './sound/9f.mp3',
+        './sound/top.mp3',
+        './sound/goingup.mp3',
+        './sound/arrive.mp3',
+        './sound/machine.mp3',
+        './sound/dingdongdangdong.mp3'
+    ],
+    'col-editor': [
+        './sound/ding1.mp3',
+        './sound/ding2.mp3',
+        './sound/ding3.mp3'
+    ],
+    'col-book': [
+        './sound/ding4.mp3',
+        './sound/goingdown.mp3'
+    ]
+};
+const detailSounds = {};
 
 Object.values(modeSounds).forEach(sound => {
     sound.preload = 'auto';
@@ -18,6 +41,21 @@ Object.values(columnSounds).forEach(sound => {
     sound.loop = true;
     sound.preload = 'auto';
 });
+Object.entries(detailSoundFiles).forEach(([columnId, files]) => {
+    detailSounds[columnId] = files.map(file => {
+        const sound = new Audio(file);
+        sound.preload = 'auto';
+        return sound;
+    });
+});
+
+function isDarkMode() {
+    return document.getElementById('item-title')?.classList.contains('active');
+}
+
+function isAuthorMode() {
+    return document.getElementById('item-author')?.classList.contains('active');
+}
 
 function playModeSound(soundName) {
     const sound = modeSounds[soundName];
@@ -47,6 +85,39 @@ function stopAllColumnSounds() {
     Object.keys(columnSounds).forEach(stopColumnSound);
 }
 
+function startColumnEffects(column) {
+    if (!isDarkMode() || isAuthorMode()) return;
+
+    const columnId = column.id;
+    const listItems = column.querySelectorAll('.info-list li');
+
+    playColumnSound(columnId);
+    runColorScan(columnId, listItems);
+
+    const intervalTime = 140;
+    const holdTime = 130;
+    const loopInterval = ((listItems.length - 1) * intervalTime * 2) + holdTime + 200;
+
+    if (activeLoops[columnId]) clearInterval(activeLoops[columnId]);
+    activeLoops[columnId] = setInterval(() => {
+        runColorScan(columnId, listItems);
+    }, loopInterval);
+}
+
+function startActiveColumnEffects() {
+    document.querySelectorAll('.top-container .column.active').forEach(startColumnEffects);
+}
+
+function playDetailSound(columnId, itemIndex) {
+    if (!isDarkMode() || !isAuthorMode()) return;
+
+    const sound = detailSounds[columnId]?.[itemIndex];
+    if (!sound) return;
+
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+}
+
 function runColorScan(targetId, listItems) {
     const itemsArray = Array.from(listItems);
     if (itemsArray.length === 0) return;
@@ -70,8 +141,7 @@ function runColorScan(targetId, listItems) {
     itemsArray.forEach((li, index) => {
         addTimeout(() => {
             // 상단 카테고리 자체도 열려있어야 하고, 동시에 다크 모드(item-title active)도 켜져 있어야 스캔 진행
-            const isDark = document.getElementById('item-title') && document.getElementById('item-title').classList.contains('active');
-            if (!document.getElementById(targetId).classList.contains('active') || !isDark) return;
+            if (!document.getElementById(targetId).classList.contains('active') || !isDarkMode() || isAuthorMode()) return;
             
             li.style.color = '#ff0000'; 
 
@@ -90,8 +160,7 @@ function runColorScan(targetId, listItems) {
         if (index === 0) return; 
 
         addTimeout(() => {
-            const isDark = document.getElementById('item-title') && document.getElementById('item-title').classList.contains('active');
-            if (!document.getElementById(targetId).classList.contains('active') || !isDark) return;
+            if (!document.getElementById(targetId).classList.contains('active') || !isDarkMode() || isAuthorMode()) return;
             
             li.style.color = '#ff0000';
 
@@ -143,21 +212,7 @@ function toggleCategory(elementId) {
                 allGlobalListItems.forEach(li => li.style.color = '#dfedef');
 
                 // 💡 배경이 어두워졌으므로, 이미 상단에 열려있는(.active) 카테고리가 있다면 즉시 핑퐁 가동!
-                document.querySelectorAll('.top-container .column.active').forEach(col => {
-                    const listItems = col.querySelectorAll('.info-list li');
-                    const colId = col.id;
-
-                    playColumnSound(colId);
-                    runColorScan(colId, listItems);
-
-                    const intervalTime = 140;
-                    const holdTime = 130;
-                    const loopInterval = ((listItems.length - 1) * intervalTime * 2) + holdTime + 200;
-
-                    activeLoops[colId] = setInterval(() => {
-                        runColorScan(colId, listItems);
-                    }, loopInterval);
-                });
+                startActiveColumnEffects();
 
             } else {
                 // [다크모드 OFF]
@@ -175,6 +230,16 @@ function toggleCategory(elementId) {
                 allGlobalListItems.forEach(li => li.style.color = '#3a4044');
             }
         }
+
+        if (elementId === 'item-author') {
+            if (isActive) {
+                clearAllScans();
+                stopAllColumnSounds();
+                allGlobalListItems.forEach(li => li.style.color = '#dfedef');
+            } else {
+                startActiveColumnEffects();
+            }
+        }
         return; 
     }
 
@@ -183,34 +248,17 @@ function toggleCategory(elementId) {
     // ==========================================
     if (elementId.startsWith('col-')) {
         const listItems = target.querySelectorAll('.info-list li');
-        const isDark = document.getElementById('item-title') && document.getElementById('item-title').classList.contains('active');
+        const isDark = isDarkMode();
 
         if (isActive) {
             // 카테고리 열기
-            if (isDark) {
-                playColumnSound(elementId);
-            }
-
             listItems.forEach(li => {
                 li.classList.add('show');
                 li.style.color = isDark ? '#dfedef' : '#3a4044';
             });
 
             // 💡 ★조건 검사★ 오직 다크 모드(isDark)가 켜져 있을 때만 핑퐁 루프를 생성합니다.
-            if (isDark) {
-                if (activeLoops[elementId]) clearInterval(activeLoops[elementId]);
-
-                runColorScan(elementId, listItems);
-
-                const intervalTime = 140;
-                const holdTime = 130;
-                const totalOnewayTime = (listItems.length - 1) * intervalTime;
-                const loopInterval = (totalOnewayTime * 2) + holdTime + 200; 
-
-                activeLoops[elementId] = setInterval(() => {
-                    runColorScan(elementId, listItems);
-                }, loopInterval);
-            }
+            startColumnEffects(target);
 
         } else {
             // 카테고리 닫기
@@ -229,3 +277,12 @@ function toggleCategory(elementId) {
         }
     }
 }
+
+document.querySelectorAll('.top-container .column').forEach(column => {
+    column.querySelectorAll('.info-list li').forEach((item, index) => {
+        item.addEventListener('click', event => {
+            event.stopPropagation();
+            playDetailSound(column.id, index);
+        });
+    });
+});
