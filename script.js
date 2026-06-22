@@ -5,8 +5,17 @@ const modeSounds = {
     open: new Audio('./sound/dooropen.mp3'),
     close: new Audio('./sound/doorclose.mp3')
 };
+const columnSounds = {
+    'col-keywords': new Audio('./sound/column1.mp3'),
+    'col-editor': new Audio('./sound/column2.mp3'),
+    'col-book': new Audio('./sound/column3.mp3')
+};
 
 Object.values(modeSounds).forEach(sound => {
+    sound.preload = 'auto';
+});
+Object.values(columnSounds).forEach(sound => {
+    sound.loop = true;
     sound.preload = 'auto';
 });
 
@@ -16,6 +25,22 @@ function playModeSound(soundName) {
 
     sound.currentTime = 0;
     sound.play().catch(() => {});
+}
+
+function playColumnSound(columnId) {
+    const sound = columnSounds[columnId];
+    if (!sound) return;
+
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+}
+
+function stopColumnSound(columnId) {
+    const sound = columnSounds[columnId];
+    if (!sound) return;
+
+    sound.pause();
+    sound.currentTime = 0;
 }
 
 function runColorScan(targetId, listItems) {
@@ -156,6 +181,8 @@ function toggleCategory(elementId) {
 
         if (isActive) {
             // 카테고리 열기
+            playColumnSound(elementId);
+
             listItems.forEach(li => {
                 li.classList.add('show');
                 li.style.color = isDark ? '#dfedef' : '#3a4044';
@@ -179,6 +206,7 @@ function toggleCategory(elementId) {
 
         } else {
             // 카테고리 닫기
+            stopColumnSound(elementId);
             listItems.forEach(li => li.classList.remove('show'));
 
             // 이 열에 돌고 있던 인터벌 및 타이머 박멸
