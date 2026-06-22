@@ -43,6 +43,10 @@ function stopColumnSound(columnId) {
     sound.currentTime = 0;
 }
 
+function stopAllColumnSounds() {
+    Object.keys(columnSounds).forEach(stopColumnSound);
+}
+
 function runColorScan(targetId, listItems) {
     const itemsArray = Array.from(listItems);
     if (itemsArray.length === 0) return;
@@ -143,6 +147,7 @@ function toggleCategory(elementId) {
                     const listItems = col.querySelectorAll('.info-list li');
                     const colId = col.id;
 
+                    playColumnSound(colId);
                     runColorScan(colId, listItems);
 
                     const intervalTime = 140;
@@ -166,6 +171,7 @@ function toggleCategory(elementId) {
 
                 // 💡 배경이 밝아졌으므로 모든 핑퐁을 즉시 강제 종료하고 글자색을 검은색으로 리셋!
                 clearAllScans();
+                stopAllColumnSounds();
                 allGlobalListItems.forEach(li => li.style.color = '#3a4044');
             }
         }
@@ -181,7 +187,9 @@ function toggleCategory(elementId) {
 
         if (isActive) {
             // 카테고리 열기
-            playColumnSound(elementId);
+            if (isDark) {
+                playColumnSound(elementId);
+            }
 
             listItems.forEach(li => {
                 li.classList.add('show');
