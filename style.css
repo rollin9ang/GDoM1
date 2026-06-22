@@ -1,4 +1,4 @@
-/* 기본 스타일 초기화 및 전체 폰트 설정 (기존 유지) */
+/* 기본 스타일 초기화 및 전체 폰트 설정 */
 * {
     margin: 0;
     padding: 0;
@@ -99,10 +99,6 @@ body {
 .column:not(.active) .info-list li:nth-child(9) { transition-delay: 0.00s; }
 
 
-/* ==========================================
-   ★ 여기서부터 새로 바뀐 진짜 자동 매칭 구조 ★
-   ========================================== */
-
 /* 하단 전용 토글 아이템 박스 */
 .bottom-item {
     position: relative;
@@ -135,9 +131,6 @@ body.dark-mode #item-author {
     -ms-user-select: none;
     transition: opacity;
 }
-
-/* ★ 핵심 꼼수 탈출: 두 글자를 겹치기 위해 하나만 absolute로 띄우는 게 아니라, 
-   둘 다 각자 상태에 맞춰 필요할 때만 물리적인 부피를 가지게 정렬합니다. */
 
 /* 1. 기본 상태: 라벨(Title)은 원래 자리에 존재하고, 변환값(Elevator)은 숨겨두고 부피를 0으로 만듭니다. */
 .label {
@@ -186,11 +179,6 @@ body.dark-mode #item-author {
     background-color: currentColor;
 }
 
-
-/* ==========================================
-   ★ 글자 크기에 실시간 칼매칭되는 사각형 테두리 ★
-   ========================================== */
-
 /* 1. 상단 타이틀 호버 효과 */
 .clickable-title:hover {
     color: inherit !important;
@@ -198,9 +186,7 @@ body.dark-mode #item-author {
     outline-offset: 3px; 
 }
 
-/* 2. 하단 아이템 호버 효과
-   클릭 전이든 후든, 현재 화면을 밀어내고 있는 진짜 글자 크기(max-content)만큼만 
-   부모 박스 너비가 실시간으로 변하기 때문에, 테두리도 그 너비에 칼같이 맞춰서 생성됩니다! */
+/* 2. 하단 아이템 호버 효과 */
 .bottom-item:hover {
     outline: 1.4px solid currentColor !important;
     outline-offset: 2px;
@@ -209,7 +195,7 @@ body.dark-mode #item-author {
 @media (max-width: 768px) {
     body {
         min-height: 100svh;
-        padding: 0.85rem;
+        padding: 1rem;
         justify-content: space-between;
         gap: 0.7rem;
     }
@@ -222,6 +208,7 @@ body.dark-mode #item-author {
 
     .top-container {
         grid-template-columns: 1fr 1fr;
+        row-gap: 5.5rem;
     }
 
     #col-book {
@@ -243,12 +230,12 @@ body.dark-mode #item-author {
     }
 
     .clickable-title {
-        font-size: 1.15rem;
+        font-size: 1.5rem;
         margin-bottom: 0.65rem;
     }
 
     .info-list {
-        font-size: 0.94rem;
+        font-size: 1.5rem;
         line-height: 1.08;
     }
 
@@ -265,7 +252,7 @@ body.dark-mode #item-author {
 
     .label,
     .value {
-        font-size: 1.05rem;
+        font-size: 1.5rem;
         line-height: 1.05;
     }
 
@@ -274,8 +261,8 @@ body.dark-mode #item-author {
     }
 
     .random-detail-button {
-        width: 1.45rem;
-        height: 1.45rem;
+        width: 1.5rem;
+        height: 1.5rem;
         border-width: 1px;
     }
 }
