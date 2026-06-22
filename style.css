@@ -159,6 +159,33 @@ body.dark-mode #item-author {
     opacity: 1;
 }
 
+.bottom-item.active .author-value {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.random-detail-button {
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0;
+    border: 1.4px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    display: none;
+    flex: 0 0 auto;
+}
+
+#item-author.active .random-detail-button {
+    display: block;
+}
+
+.random-detail-button:hover {
+    background-color: currentColor;
+}
+
 
 /* ==========================================
    ★ 글자 크기에 실시간 칼매칭되는 사각형 테두리 ★

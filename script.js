@@ -118,6 +118,15 @@ function playDetailSound(columnId, itemIndex) {
     sound.play().catch(() => {});
 }
 
+function playRandomDetailClicks() {
+    if (!isDarkMode() || !isAuthorMode()) return;
+
+    const activeItems = Array.from(document.querySelectorAll('.top-container .column.active .info-list li'));
+    const shuffledItems = activeItems.sort(() => Math.random() - 0.5);
+
+    shuffledItems.slice(0, 5).forEach(item => item.click());
+}
+
 function runColorScan(targetId, listItems) {
     const itemsArray = Array.from(listItems);
     if (itemsArray.length === 0) return;
@@ -285,4 +294,9 @@ document.querySelectorAll('.top-container .column').forEach(column => {
             playDetailSound(column.id, index);
         });
     });
+});
+
+document.querySelector('.random-detail-button')?.addEventListener('click', event => {
+    event.stopPropagation();
+    playRandomDetailClicks();
 });
