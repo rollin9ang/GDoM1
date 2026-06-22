@@ -108,14 +108,27 @@ function startActiveColumnEffects() {
     document.querySelectorAll('.top-container .column.active').forEach(startColumnEffects);
 }
 
-function playDetailSound(columnId, itemIndex) {
+function playDetailSound(columnId, itemIndex, item) {
     if (!isDarkMode() || !isAuthorMode()) return;
 
     const sound = detailSounds[columnId]?.[itemIndex];
     if (!sound) return;
 
+    if (!item.dataset.originalColor) {
+        item.dataset.originalColor = item.style.color || getComputedStyle(item).color;
+    }
+
+    item.style.color = '#ff0000';
+    sound.onended = () => {
+        item.style.color = item.dataset.originalColor;
+        delete item.dataset.originalColor;
+    };
+
     sound.currentTime = 0;
-    sound.play().catch(() => {});
+    sound.play().catch(() => {
+        item.style.color = item.dataset.originalColor;
+        delete item.dataset.originalColor;
+    });
 }
 
 function playRandomDetailClicks() {
@@ -297,7 +310,7 @@ document.querySelectorAll('.top-container .column').forEach(column => {
     column.querySelectorAll('.info-list li').forEach((item, index) => {
         item.addEventListener('click', event => {
             event.stopPropagation();
-            playDetailSound(column.id, index);
+            playDetailSound(column.id, index, item);
         });
     });
 });
