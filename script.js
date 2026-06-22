@@ -1,6 +1,22 @@
 // 실행 중인 애니메이션 인터벌과 개별 타이머 배열을 관리하는 객체
 const activeLoops = {};
 const activeTimeouts = {}; 
+const modeSounds = {
+    open: new Audio('./sound/dooropen.mp3'),
+    close: new Audio('./sound/doorclose.mp3')
+};
+
+Object.values(modeSounds).forEach(sound => {
+    sound.preload = 'auto';
+});
+
+function playModeSound(soundName) {
+    const sound = modeSounds[soundName];
+    if (!sound) return;
+
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+}
 
 function runColorScan(targetId, listItems) {
     const itemsArray = Array.from(listItems);
@@ -90,6 +106,7 @@ function toggleCategory(elementId) {
         if (elementId === 'item-title') {
             if (isActive) {
                 // [다크모드 ON]
+                playModeSound('open');
                 document.body.classList.add('dark-mode');
                 document.body.style.backgroundColor = '#3a4044';
                 document.body.style.color = '#dfedef';
@@ -114,6 +131,7 @@ function toggleCategory(elementId) {
 
             } else {
                 // [다크모드 OFF]
+                playModeSound('close');
                 document.body.classList.remove('dark-mode');
                 document.getElementById('item-author')?.classList.remove('active');
                 document.body.style.backgroundColor = '#dfedef';
