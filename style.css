@@ -208,7 +208,7 @@ body.dark-mode #item-author {
 
     .top-container {
         grid-template-columns: 1fr 1fr;
-        row-gap: 1.5rem;
+        row-gap: 2.5rem;
     }
 
     #col-book {
