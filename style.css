@@ -209,7 +209,7 @@ body.dark-mode #item-author {
 @media (max-width: 768px) {
     body {
         min-height: 100svh;
-        padding: 1rem;
+        padding: 1rem 0.6rem 1rem 1rem;
         justify-content: flex-start;
         gap: 1rem;
     }
@@ -229,8 +229,13 @@ body.dark-mode #item-author {
     }
 
     .bottom-container {
+        grid-template-columns: 1fr 1fr;
         margin-top: 0;
         padding-top: 0.25rem;
+    }
+
+    .bottom-container > div:last-child {
+        display: none;
     }
 
     .column {
